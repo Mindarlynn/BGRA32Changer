@@ -143,26 +143,19 @@ namespace WpfApp1.ViewModel
         {
             var img = Images[CurrentItem];
             var origImg = OriginalImages[img];
-            int width = img.PixelWidth;
-            int height = img.PixelHeight;
-            int stride = width * 4;
+            var width = img.PixelWidth;
+            var height = img.PixelHeight;
+            var stride = width * 4;
             var pixels = new PixelColor[height, width];
 
-            try
+            unsafe
             {
-                unsafe
-                {
-                    BitmapSourceHelper.CopyPixels(origImg, pixels, stride, 0);
-                }
-            }
-            finally
-            {
-
+                BitmapSourceHelper.CopyPixels(origImg, pixels, stride, 0);
             }
 
-            for(int y = 0; y < height; ++y)
+            for (var y = 0; y < height; ++y)
             {
-                for(int x = 0; x < width; ++x)
+                for(var x = 0; x < width; ++x)
                 {
                     pixels[y, x] = new PixelColor()
                     {
@@ -177,30 +170,16 @@ namespace WpfApp1.ViewModel
             BitmapSourceHelper.WritePixels(img, pixels, stride, 0);
         }
 
-        private double listViewHeight;
-        public double ListViewHeight
-        {
-            get
-            {
-                return listViewHeight;
-            }
-            set
-            {
-                listViewHeight = value;
-            }
-        }
-
         public Page1ViewModel()
         {
-            //OpenFile = new Command(OpenFileCallback);
-            OpenFile = new Command(Test);
+            OpenFile = new Command(OpenFileCallback);
             LoadedImages = new ObservableCollection<ListViewItem>();
             OriginalImages = new Dictionary<WriteableBitmap, BitmapImage>();
             Images = new Dictionary<ListViewItem, WriteableBitmap>();
             Settings = new Dictionary<WriteableBitmap, IntPixelColor>();
         }
 
-        private void Test()
+        private void OpenFileCallback()
         {
             using (var dialog = new System.Windows.Forms.OpenFileDialog())
             {
@@ -213,7 +192,6 @@ namespace WpfApp1.ViewModel
                         var origImg = new BitmapImage(new Uri(file));
                         var img = new WriteableBitmap(origImg);
 
-                        //ImageColorChangeTest(ref img);
                         var item = new ListViewItem()
                         {
                             Content = new Image()
@@ -235,71 +213,6 @@ namespace WpfApp1.ViewModel
                         });
                         
                         LoadedImages.Add(item);
-                    }
-                }
-            }
-        }
-
-        private void ImageColorChangeTest(ref WriteableBitmap wbmp)
-        {
-            int width = wbmp.PixelWidth;
-            int height = wbmp.PixelHeight;
-            int stride = width * 4;
-            PixelColor[,] pcs = new PixelColor[height, width];
-
-            BitmapSourceHelper.CopyPixels(wbmp, pcs, stride, 0);
-
-            for(int y = 0; y < height; ++y)
-            {
-                for(int x = 0; x < width; ++x)
-                {
-                    if (pcs[y, x].Red >= 150 &&
-                        pcs[y, x].Green >= 150 &&
-                        pcs[y, x].Blue >= 150)
-                        pcs[y, x] = new PixelColor
-                        {
-                            Blue = 0x00,
-                            Green = 0x00,
-                            Red = 0x00,
-                            Alpha = 0x00
-                        };
-                    
-                }
-            }
-            BitmapSourceHelper.WritePixels(wbmp, pcs, stride, 0);
-        }
-
-        public void OpenFileCallback()
-        {
-            using(var dialog = new System.Windows.Forms.OpenFileDialog())
-            {
-                dialog.Multiselect = true;
-                dialog.Filter = "PNG Files|*.png|Jpeg Files|*.jpg";
-                if(dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                {
-                    foreach(var file in dialog.FileNames)
-                    {
-                        var img = new WriteableBitmap(new BitmapImage(new Uri(file)));
-
-                        var item = new ListViewItem()
-                        {
-                            Content = new Image()
-                            {
-                                Source = img,
-                                Stretch = Stretch.UniformToFill,
-                            }
-                        };
-
-                        Images.Add(item, img);
-                        Settings.Add(img, new IntPixelColor()
-                        {
-                            Red = 0,
-                            Green = 0,
-                            Blue = 0,
-                            Alpha = 0,
-                        });
-                        LoadedImages.Add(item);
-                        
                     }
                 }
             }
