@@ -1,0 +1,91 @@
+﻿<Page x:Class="WpfApp1.Pages.Page1"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:WpfApp1.Pages" xmlns:viewmodel="clr-namespace:WpfApp1.ViewModel" xmlns:controls="clr-namespace:WpfApp1.Controls"
+      mc:Ignorable="d" 
+      d:DesignHeight="600" d:DesignWidth="1000"
+      Title="Page1">
+    <Page.DataContext>
+        <viewmodel:Page1ViewModel/>
+    </Page.DataContext>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="200"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <ListView Name="ImageListView">
+                <ListView.Style>
+                    <Style TargetType="ListView">
+                        <Setter Property="ItemsSource"  Value="{Binding LoadedImages}"/>
+                        <Setter Property="SelectedItem" Value="{Binding CurrentItem}"/>
+                    </Style>
+                </ListView.Style>
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="Width" Value="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
+            </ListView>
+        </Grid>
+        <Grid Grid.Row="1" Background="LightGray">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.Resources>
+                    <Style TargetType="controls:CustomSlider">
+                        <Setter Property="VerticalAlignment"    Value="Center"/>
+                        <Setter Property="Margin"               Value="10 0"/>
+                        <Setter Property="Minimum"              Value="-255"/>
+                        <Setter Property="Maximum"              Value="255"/>
+                        <Setter Property="Value"                Value="0"/>
+                    </Style>
+                </Grid.Resources>
+                <controls:CustomSlider Grid.Row="0" Text="Red"      Value="{Binding CurrentR, Mode=TwoWay}"/>
+                <controls:CustomSlider Grid.Row="1" Text="Green"    Value="{Binding CurrentG, Mode=TwoWay}"/>
+                <controls:CustomSlider Grid.Row="2" Text="Blue"     Value="{Binding CurrentB, Mode=TwoWay}"/>
+                <controls:CustomSlider Grid.Row="3" Text="Alpha"    Value="{Binding CurrentA, Mode=TwoWay}"/>
+            </Grid>
+            <Grid Grid.Column="1">
+                <StackPanel>
+                    <StackPanel.Style>
+                        <Style TargetType="StackPanel">
+                            <Setter Property="Orientation"          Value="Horizontal"/>
+                            <Setter Property="FlowDirection"        Value="RightToLeft"/>
+                            <Setter Property="VerticalAlignment"    Value="Top"/>
+                            <Setter Property="HorizontalAlignment"  Value="Right"/>
+                            <Setter Property="Margin"               Value="10 10"/>
+                            <Setter Property="Height"               Value="25"/>
+                        </Style>
+                    </StackPanel.Style>
+                    <StackPanel.Resources>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Padding"          Value="0 4 0 0"/>
+                            <Setter Property="FlowDirection"    Value="LeftToRight"/>
+                        </Style>
+                    </StackPanel.Resources>
+                    <Button Content="Load Images" Command="{Binding OpenFile}" Width="80"/>
+                    <Rectangle Width="10"/>
+                    <TextBlock Text="{Binding ItemsSource.Count, ElementName=ImageListView}"/>
+                    <TextBlock Text="Number of Images : "/>
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </Grid>
+</Page>
