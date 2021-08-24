@@ -4,8 +4,9 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:WpfApp1.Pages" xmlns:viewmodel="clr-namespace:WpfApp1.ViewModel" xmlns:controls="clr-namespace:WpfApp1.Controls"
+      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
       mc:Ignorable="d" 
-      d:DesignHeight="600" d:DesignWidth="1000"
+      d:DesignHeight="600" d:DesignWidth="800"
       Title="Page1">
     <Page.DataContext>
         <viewmodel:Page1ViewModel/>
@@ -22,11 +23,12 @@
                     <Style TargetType="ListView">
                         <Setter Property="ItemsSource"  Value="{Binding LoadedImages}"/>
                         <Setter Property="SelectedItem" Value="{Binding CurrentItem}"/>
+                        <Setter Property="Background" Value="White"/>
                     </Style>
                 </ListView.Style>
                 <ListView.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <StackPanel Orientation="Horizontal"/>
+                        <StackPanel Orientation="Horizontal" Background="{Binding BackgroundColour}"/>
                     </ItemsPanelTemplate>
                 </ListView.ItemsPanel>
                 <ListView.ItemContainerStyle>
@@ -63,27 +65,80 @@
                 <controls:CustomSlider Grid.Row="3" Text="Alpha"    Value="{Binding CurrentA, Mode=TwoWay}"/>
             </Grid>
             <Grid Grid.Column="1">
-                <StackPanel>
-                    <StackPanel.Style>
-                        <Style TargetType="StackPanel">
-                            <Setter Property="Orientation"          Value="Horizontal"/>
-                            <Setter Property="FlowDirection"        Value="RightToLeft"/>
-                            <Setter Property="VerticalAlignment"    Value="Top"/>
-                            <Setter Property="HorizontalAlignment"  Value="Right"/>
-                            <Setter Property="Margin"               Value="10 10"/>
-                            <Setter Property="Height"               Value="25"/>
-                        </Style>
-                    </StackPanel.Style>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.Resources>
+                    <Style TargetType="StackPanel">
+                        <Setter Property="Orientation"          Value="Horizontal"/>
+                        <Setter Property="VerticalAlignment"    Value="Center"/>
+                        <Setter Property="HorizontalAlignment"  Value="Right"/>
+                        <Setter Property="Margin" Value="10 0"/>
+                    </Style>
+                </Grid.Resources>
+                <StackPanel Grid.Row="0">
                     <StackPanel.Resources>
                         <Style TargetType="TextBlock">
                             <Setter Property="Padding"          Value="0 4 0 0"/>
-                            <Setter Property="FlowDirection"    Value="LeftToRight"/>
                         </Style>
                     </StackPanel.Resources>
-                    <Button Content="Load Images" Command="{Binding OpenFile}" Width="80"/>
-                    <Rectangle Width="10"/>
-                    <TextBlock Text="{Binding ItemsSource.Count, ElementName=ImageListView}"/>
                     <TextBlock Text="Number of Images : "/>
+                    <TextBlock Text="{Binding ItemsSource.Count, ElementName=ImageListView}"/>
+                    <Rectangle Width="10"/>
+                    <Button Content="Load Images" Command="{Binding OpenFile}" Width="90" Height="25"/>
+                </StackPanel>
+                <StackPanel Grid.Row="1">
+                    <StackPanel.Resources>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Padding"          Value="0 4 0 0"/>
+                        </Style>
+                    </StackPanel.Resources>
+                    <TextBlock Text="BackgroundColour"/>
+                    <Rectangle Width="10"/>
+                    <Rectangle>
+                        <Rectangle.Style>
+                            <Style TargetType="Rectangle">
+                                <Setter Property="Stroke" Value="Black"/>
+                                <Setter Property="StrokeThickness" Value="1"/>
+                                <Setter Property="Fill" Value="{Binding BackgroundColour}"/>
+                                <Setter Property="Width" Value="90"/>
+                                <Setter Property="Height" Value="25"/>
+                            </Style>
+                        </Rectangle.Style>
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseDown">
+                                <i:InvokeCommandAction Command="{Binding ChangeBackgroundColour}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </Rectangle>
+                </StackPanel>
+                <controls:CustomSlider Grid.Row="2">
+                    <controls:CustomSlider.Style>
+                        <Style TargetType="controls:CustomSlider">
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                            <Setter Property="Text" Value="Alpha"/>
+                            <Setter Property="Minimum" Value="0"/>
+                            <Setter Property="Maximum" Value="255"/>
+                            <Setter Property="Value" Value="{Binding BackgroundColourAlpha, Mode=TwoWay}"/>
+                        </Style>
+                    </controls:CustomSlider.Style>
+                </controls:CustomSlider>
+                <StackPanel Grid.Row="3">
+                    <StackPanel.Resources>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Padding"          Value="0 4 0 0"/>
+                        </Style>
+                        <Style TargetType="TextBox">
+                            <Setter Property="Padding"          Value="0 3 0 0"/>
+                        </Style>
+                    </StackPanel.Resources>
+                    <TextBlock Text="Size of Column : "/>
+                    <TextBox Text="{Binding ColumnSize}" Width="30"/>
+                    <Rectangle Width="10"/>
+                    <Button Content="Save" Command="{Binding SaveFile}" Width="90" Height="25"/>
                 </StackPanel>
             </Grid>
         </Grid>
