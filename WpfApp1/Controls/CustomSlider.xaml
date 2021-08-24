@@ -20,8 +20,8 @@
                 <Setter Property="Width" Value="10"/>
             </Style>
         </Grid.Resources>
-        <TextBlock Grid.Column="0" Text="{Binding Text, ElementName=_this}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+        <TextBlock Grid.Column="0" Text="{Binding Text, ElementName=_this}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" TextAlignment="Center"/>
         <Slider Grid.Column="2" Value="{Binding Value, ElementName=_this, Mode=TwoWay}" Minimum="{Binding Minimum, ElementName=_this}" Maximum="{Binding Maximum, ElementName=_this}" SmallChange="{Binding Change,ElementName=_this}" LargeChange="{Binding Change, ElementName=_this}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
-        <TextBlock Grid.Column="4" Text="{Binding Value, ElementName=_this, Mode=TwoWay}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+        <TextBlock Grid.Column="4" Text="{Binding Value, ElementName=_this, Mode=TwoWay}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" TextAlignment="Center"/>
     </Grid>
 </UserControl>
