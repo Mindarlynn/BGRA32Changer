@@ -323,12 +323,12 @@ namespace WpfApp1.ViewModel
                 PixelColor[,] pixels = new PixelColor[img.PixelHeight, img.PixelWidth];
                 BitmapSourceHelper.CopyPixels(img, pixels, img.PixelWidth * 4, 0);
 
-                // 색상 혼합 식
+                // Alpha Blending expression
                 /*
                 rOut = (rA * aA / 255) + (rB * aB * (255 - aA) / (255*255))
                 gOut = (gA * aA / 255) + (gB * aB * (255 - aA) / (255*255))
                 bOut = (bA * aA / 255) + (bB * aB * (255 - aA) / (255*255))
-                aOut = aA + (aB * (255 - aA) / 255)
+                aOut = (aA           ) + (     aB * (255 - aA) / (255    ))
                 */
 
                 for (int yy = 0; yy < img.PixelHeight; ++yy)
@@ -337,19 +337,20 @@ namespace WpfApp1.ViewModel
                     {
                         var A = pixels[yy, xx];
                         var B = BackgroundColour.Color;
-
-                        var rOut = (A.Red   * A.Alpha / 255) + (B.R * B.A * (255 - A.Alpha) / 255 * 255);
-                        var gOut = (A.Green * A.Alpha / 255) + (B.G * B.A * (255 - A.Alpha) / 255 * 255);
-                        var bOut = (A.Blue  * A.Alpha / 255) + (B.B * B.A * (255 - A.Alpha) / 255 * 255);
-                        var aOut = (A.Alpha)                 + (      B.A * (255 - A.Alpha) / 255);
-
+                        
+                        var rOut = (A.Red   * A.Alpha / 255) + (B.R * B.A * (255 - A.Alpha) / (255 * 255));
+                        var gOut = (A.Green * A.Alpha / 255) + (B.G * B.A * (255 - A.Alpha) / (255 * 255));
+                        var bOut = (A.Blue  * A.Alpha / 255) + (B.B * B.A * (255 - A.Alpha) / (255 * 255));
+                        var aOut = (A.Alpha                ) + (      B.A * (255 - A.Alpha) / (255      ));
+                        
                         pixels[yy, xx] = new PixelColor()
                         {
-                            Red     = (byte)rOut,
-                            Green   = (byte)gOut,
-                            Blue    = (byte)bOut,
-                            Alpha   = (byte)aOut
+                            Red     = checked((byte)rOut),
+                            Green   = checked((byte)gOut),
+                            Blue    = checked((byte)bOut),
+                            Alpha   = checked((byte)aOut)
                         };
+                        
                     }
                 }
 
@@ -358,9 +359,7 @@ namespace WpfApp1.ViewModel
 
                 wbmp.WritePixels(
                     new Int32Rect(width * x + dx, height * y + dy, img.PixelWidth, img.PixelHeight),
-                    pixels, 
-                    img.PixelWidth * 4, 
-                    0);
+                    pixels, img.PixelWidth * 4, 0);
 
                 if(++x % ColumnSize == 0)
                 {
