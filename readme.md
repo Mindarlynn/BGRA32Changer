@@ -1,6 +1,6 @@
 # BGRA32Changer
 #### 이미지의 BGRA값을 조정하고, 해당 이미지를 선형으로 합치는 프로그램입니다. 
-
+<i>for english users: <a href="/readme_en.md">readme_en.md</a>
 <br/>
 
 ## 프로그램 사용 가이드
